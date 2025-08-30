@@ -20,7 +20,6 @@ scikit-learn==1.3.2
 # Async and concurrency
 redis==5.0.1
 aioredis==2.0.1
-celery==5.3.4
 
 # Visualization and analysis
 matplotlib==3.8.2
@@ -46,13 +45,12 @@ pytest-cov==4.1.0
 black==23.11.0
 pylint==3.0.3
 mypy==1.7.1
-pre-commit==3.6.0
 
 # Jupyter for analysis
 jupyter==1.0.0
 jupyterlab==4.0.9
 ipykernel==6.27.1
 
-# Time series analysis
-ta-lib==0.4.28
+# Time series analysis (remove problematic packages)
+# ta-lib==0.4.28  # Commented out - causes build issues
 yfinance==0.2.28
