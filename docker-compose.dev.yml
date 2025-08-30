@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.dev
+    ports:
+      - "8000:8000"
+      - "8888:8888" # Jupyter notebook
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/trading_bot
+      - REDIS_URL=redis://redis:6379/0
+      - IB_HOST=host.docker.internal
+      - IB_PORT=7497
+      - PYTHONPATH=/workspace/src
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - .:/workspace
+      - /workspace/__pycache__
+      - /workspace/.pytest_cache
+    working_dir: /workspace
+    command: tail -f /dev/null # Keep container running
+
+  db:
+    image: timescale/timescaledb:latest-pg14
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: trading_bot
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./migrations/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@trading-bot.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    depends_on:
+      - db
+    restart: unless-stopped
+
+volumes:
+  postgres_dev_data:

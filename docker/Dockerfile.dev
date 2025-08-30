@@ -1,0 +1,47 @@
+FROM python:3.11-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/workspace/src
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    curl \
+    git \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create vscode user
+RUN groupadd --gid 1000 vscode \
+    && useradd --uid 1000 --gid vscode --shell /bin/bash --create-home vscode
+
+# Set working directory
+WORKDIR /workspace
+
+# Copy requirements first for better caching
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install additional development tools
+RUN pip install --no-cache-dir \
+    jupyter \
+    jupyterlab \
+    ipykernel \
+    pytest \
+    pytest-asyncio \
+    pytest-cov \
+    black \
+    pylint \
+    mypy
+
+# Switch to vscode user
+USER vscode
+
+# Expose ports
+EXPOSE 8000 8888
+
+CMD ["tail", "-f", "/dev/null"]
