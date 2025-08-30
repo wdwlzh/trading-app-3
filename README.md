@@ -30,26 +30,49 @@ A comprehensive trading bot application with Interactive Brokers integration, ba
    cd trading-app-3
    ```
 
-2. **Open in VS Code Dev Container**
+2. **Initial setup**
+   ```bash
+   ./setup.sh
+   # or
+   make setup
+   ```
+
+3. **Open in VS Code Dev Container** (Recommended)
    ```bash
    code .
    ```
-   - When prompted, click "Reopen in Container"
+   - When prompted, click **"Reopen in Container"**
    - Or use Command Palette: `Dev Containers: Reopen in Container`
+   - This will automatically start Docker Desktop and set up everything
 
-3. **Start the services**
+4. **Alternative: Manual Docker setup** (if not using dev container)
    ```bash
-   docker-compose -f docker-compose.dev.yml up -d
+   make docker-up
    ```
-
-4. **Initialize the database**
-   The database will be automatically initialized with the schema when the container starts.
 
 5. **Verify setup**
    - API: http://localhost:8000
    - Database: localhost:5432 (postgres/password)
    - PgAdmin: http://localhost:5050 (admin@trading-bot.com/admin)
    - Redis: localhost:6379
+
+### Development Workflow
+
+**Inside Dev Container (VS Code):**
+```bash
+make test      # Run tests
+make lint      # Run linting
+make format    # Format code
+make jupyter   # Start Jupyter Lab
+```
+
+**Outside Container:**
+```bash
+make docker-up     # Start services
+make docker-down   # Stop services  
+make docker-logs   # View logs
+make docker-clean  # Clean up
+```
 
 ### Project Structure
 

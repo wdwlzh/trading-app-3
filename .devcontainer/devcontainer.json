@@ -23,6 +23,7 @@
             }
         }
     },
-    "postCreateCommand": "pip install -r requirements.txt",
+    "postCreateCommand": "pip install -r requirements.txt && echo '✅ Dev container setup complete!'",
+    "postStartCommand": "echo '🚀 Trading Bot Dev Environment Ready!' && echo '🔗 Access points:' && echo '   - API: http://localhost:8000' && echo '   - API Docs: http://localhost:8000/docs' && echo '   - Database: localhost:5432' && echo '   - PgAdmin: http://localhost:5050'",
     "remoteUser": "vscode"
 }
